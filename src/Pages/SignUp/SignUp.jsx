@@ -1,17 +1,20 @@
 import { useContext } from "react";
 
 import { AuthContext } from "../../Providers/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet-async";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -20,7 +23,17 @@ const SignUp = () => {
     createUser(data.email, data.password)
     .then(result => {
       const loggedUser = result.user;
-      console.log(loggedUser)
+      console.log(loggedUser);
+      updateUserProfile(data.name, data.photoURL)
+      .then(() => {
+        console.log('User profile info updated')
+      })
+      .catch(error => console.log(error))
+      reset();
+      toast('Sign In Successful!', {
+        icon: '👏',
+      });
+      navigate('/');
     })
   };
 
@@ -55,6 +68,23 @@ const SignUp = () => {
                   className="input input-bordered"
                 />
                 {errors.name && (
+                  <span className="text-sm text-red-500">
+                    This field is required
+                  </span>
+                )}
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Photo URL</span>
+                </label>
+                <input
+                  name="photoURL"
+                  {...register("photoURL", { required: true })}
+                  type="text"
+                  placeholder="photoURL"
+                  className="input input-bordered"
+                />
+                {errors.photoURL && (
                   <span className="text-sm text-red-500">
                     This field is required
                   </span>

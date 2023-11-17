@@ -29,9 +29,12 @@ const Navbar = () => {
       <li>
         {user ? (
           <>
+          <div className="flex gap-1">
+          <span className="text-sm text-blue-300">{user.displayName}</span>
             <button onClick={handleLogOut} className="btn btn-sm btn-ghost">
               Sign out
             </button>
+          </div>
           </>
         ) : (
           <>
