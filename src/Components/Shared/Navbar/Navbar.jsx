@@ -39,6 +39,9 @@ const Navbar = () => {
           </>
         )}
       </li>
+      <li>
+        <Link to="/secret">Secret</Link>
+      </li>
     </>
   );
 

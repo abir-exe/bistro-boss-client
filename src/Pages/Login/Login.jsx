@@ -5,7 +5,7 @@ import {
   validateCaptcha,
 } from "react-simple-captcha";
 import { AuthContext } from "../../Providers/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
 
@@ -14,6 +14,10 @@ const Login = () => {
 
   const [disabled, setDisabled] = useState(true);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/";
 
 
   useEffect(() => {
@@ -29,7 +33,8 @@ const Login = () => {
     signIn(email, password).then((result) => {
       const user = result.user;
       console.log(user);
-      toast.success('Successfully Signed in!')
+      toast.success('Successfully Signed in!');
+      navigate(from, {replace: true});
     });
   };
 
