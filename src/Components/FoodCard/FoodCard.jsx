@@ -3,20 +3,26 @@
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import useCart from "../../Hooks/useCart";
+
+
 
 
 const FoodCard = ({item}) => {
+  const axiosSecure = useAxiosSecure();
+  
+  const [, refetch] = useCart();
 
   const navigate = useNavigate();
 
     const {image, price, name, recipe, _id} = item;
     const {user} = useAuth();
 
-    const handleAddToCart = (food) => {
+    const handleAddToCart = () => {
       if(user && user.email){
         //send data to the database
-        console.log(food, user.email);
+        
         const cartItem = {
           menuId: _id,
           email: user.email,
@@ -24,13 +30,16 @@ const FoodCard = ({item}) => {
           image,
           price
         }
-        axios.post('http://localhost:5000/carts', cartItem)
+        axiosSecure.post('/carts', cartItem)
         .then(res => {
           console.log(res.data);
           if(res.data.insertedId){
             toast('Added to Cart!', {
               icon: '👏',
             });
+            // refetch cart
+            refetch()
+
           }
         })
 
@@ -57,7 +66,7 @@ const FoodCard = ({item}) => {
     <h2 className="card-title">{name}</h2>
     <p className="">{recipe}</p>
     <div className="card-actions justify-center">
-      <button onClick={() => handleAddToCart(item)} className="btn btn-outline border-0 border-b-2 mt-3  border-orange-400">Add to cart</button>
+      <button onClick={handleAddToCart} className="btn btn-outline border-0 border-b-2 mt-3  border-orange-400">Add to cart</button>
     </div>
   </div>
 </div>
