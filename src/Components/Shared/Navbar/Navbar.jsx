@@ -30,7 +30,7 @@ const Navbar = () => {
         <Link to="/order/salad">Order Now</Link>
       </li>
       <li>
-        <Link to="/">
+        <Link to="/dashboard/cart">
           <FaShoppingCart />
 
           <div className="badge badge-secondary">{cart.length}</div>
