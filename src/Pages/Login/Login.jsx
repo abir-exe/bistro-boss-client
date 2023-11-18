@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 const Login = () => {
   const { signIn } = useContext(AuthContext);
 
+  // eslint-disable-next-line no-unused-vars
   const [disabled, setDisabled] = useState(true);
 
   const navigate = useNavigate();
@@ -103,12 +104,13 @@ const Login = () => {
                   type="text"
                   placeholder="type the captcha"
                   className="input input-bordered"
-                  required
+                  
                 />
               </div>
               <div className="form-control mt-6">
                 <input
-                  disabled={disabled}
+                // for captcha verification, disabled={disabled}
+                  disabled={false}
                   className="btn btn-primary"
                   type="submit"
                   value="Login"

@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../Providers/AuthProvider";
 import toast from "react-hot-toast";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -9,7 +10,7 @@ const Navbar = () => {
   const handleLogOut = () => {
     logOut()
       .then(() => {
-        toast.success('Successfully signed out!')
+        toast.success("Successfully signed out!");
       })
       .catch((error) => console.log(error));
   };
@@ -25,16 +26,23 @@ const Navbar = () => {
       <li>
         <Link to="/order/salad">Order Now</Link>
       </li>
+      <li>
+        <Link to="/">
+          <FaShoppingCart />
+
+          <div className="badge badge-secondary">+99</div>
+        </Link>
+      </li>
 
       <li>
         {user ? (
           <>
-          <div className="flex gap-1">
-          <span className="text-sm text-blue-300">{user.displayName}</span>
-            <button onClick={handleLogOut} className="btn btn-sm btn-ghost">
-              Sign out
-            </button>
-          </div>
+            <div className="flex gap-1">
+              {/* <span className="text-sm text-blue-300">{user.displayName}</span> */}
+              <button onClick={handleLogOut} className="btn btn-sm btn-ghost">
+                Sign out
+              </button>
+            </div>
           </>
         ) : (
           <>
