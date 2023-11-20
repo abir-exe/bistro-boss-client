@@ -5,8 +5,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet-async";
 import toast from "react-hot-toast";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import SocialLogin from "../../Components/Shared/SocialLogin/SocialLogin";
 
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -19,22 +22,29 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-    createUser(data.email, data.password)
-    .then(result => {
+    createUser(data.email, data.password).then((result) => {
       const loggedUser = result.user;
       console.log(loggedUser);
       updateUserProfile(data.name, data.photoURL)
-      .then(() => {
-        console.log('User profile info updated')
-      })
-      .catch(error => console.log(error))
-      reset();
-      toast('Sign In Successful!', {
-        icon: '👏',
-      });
-      navigate('/');
-    })
+        .then(() => {
+          //create user entry in database
+          const userInfo = {
+            name: data.name,
+            email: data.email,
+          };
+          axiosPublic.post("/users", userInfo).then((res) => {
+            if (res.data.insertedId) {
+              console.log('user added to the database')
+              reset();
+              toast("Sign In Successful!", {
+                icon: "👏",
+              });
+              navigate("/");
+            }
+          });
+        })
+        .catch((error) => console.log(error));
+    });
   };
 
   // console.log(watch("example"));
@@ -157,9 +167,11 @@ const SignUp = () => {
                 />
               </div>
             </form>
-            <p className="text-sm font-bold">
-              have an account? <Link to="/login">Login</Link>
+            <p className="text-sm font-bold p-1 w-full mx-auto">
+              have an account? <Link className="text-orange-400" to="/login">Login</Link>
             </p>
+            <div className="divider"></div>
+            <SocialLogin></SocialLogin>
           </div>
         </div>
       </div>
